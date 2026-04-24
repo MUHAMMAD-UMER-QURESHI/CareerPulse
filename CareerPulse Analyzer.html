@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerPulse | Global Job Market Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<style>
+:root {
+    --bg-primary: #070b12;
+    --bg-card: #0c1220;
+    --bg-glass: rgba(255,255,255,0.035);
+    --bg-glass-hov: rgba(255,255,255,0.06);
+    --border-subtle: rgba(255,255,255,0.07);
+    --border-hov: rgba(0,212,255,0.22);
+    --accent: #00d4ff;
+    --accent-2: #7c3aed;
+    --accent-3: #f97316;
+    --accent-4: #10b981;
+    --accent-5: #f43f5e;
+    --text-primary: #e8edf5;
+    --text-muted: #6b7a96;
+    --text-dim: #2e3a52;
+    --shadow-accent: 0 0 40px rgba(0,212,255,0.09);
+    --shadow-card: 0 4px 32px rgba(0,0,0,0.4);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg-primary);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+/* ── Ambient background ── */
+body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+        radial-gradient(ellipse 70% 50% at 5% 0%, rgba(0,212,255,0.065) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 60% at 90% 90%, rgba(124,58,237,0.08) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 50%, rgba(16,185,129,0.03) 0%, transparent 60%);
+}
+body::after {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.55;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+.wrap { position: relative; z-index: 1; max-width: 1420px; margin: 0 auto; padding: 0 24px; }
+
+/* ── Glass Card ── */
+.glass-card {
+    background: var(--bg-glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border-subtle);
+    border-radius: 18px;
+    transition: border-color 0.28s ease, transform 0.28s ease, box-shadow 0.28s ease;
+    overflow: hidden;
+}
+.glass-card:hover {
+    border-color: var(--border-hov);
+    box-shadow: var(--shadow-accent);
+    transform: translateY(-2px);
+}
+
+/* ── Header ── */
+.site-header { padding: 52px 0 38px; }
+.header-eyebrow {
+    font-family: 'DM Mono', monospace; font-size: 0.67rem;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.site-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+    font-weight: 800; line-height: 1.03; letter-spacing: -0.025em;
+    color: var(--text-primary);
+}
+.site-title span { color: var(--accent); }
+.site-title em { color: var(--accent-2); font-style: normal; }
+.header-meta { font-size: 0.84rem; color: var(--text-muted); margin-top: 10px; }
+.live-dot {
+    display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+    background: #22c55e; animation: livePulse 2.2s infinite; flex-shrink: 0;
+}
+@keyframes livePulse {
+    0%,100% { opacity:1; box-shadow: 0 0 0 0 rgba(34,197,94,0.5); }
+    50% { opacity:.75; box-shadow: 0 0 0 7px rgba(34,197,94,0); }
+}
+
+/* ── Pill badges ── */
+.pill-badge {
+    font-family: 'DM Mono', monospace; font-size: 0.63rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 5px 14px; border-radius: 100px;
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted); background: var(--bg-glass);
+    transition: all 0.2s;
+}
+.pill-badge.active-pill {
+    border-color: var(--accent); color: var(--accent);
+    background: rgba(0,212,255,0.08);
+    box-shadow: 0 0 14px rgba(0,212,255,0.12);
+}
+
+/* ── Sector tabs ── */
+.sector-tabs { display: flex; flex-wrap: wrap; gap: 7px; padding: 18px 22px; }
+.sector-tab {
+    font-family: 'DM Mono', monospace; font-size: 0.67rem; letter-spacing: 0.05em;
+    padding: 7px 15px; border-radius: 100px;
+    border: 1px solid var(--border-subtle);
+    background: transparent; color: var(--text-muted);
+    cursor: pointer; transition: all 0.2s; white-space: nowrap;
+}
+.sector-tab:hover { border-color: rgba(255,255,255,0.16); color: var(--text-primary); }
+.sector-tab.active {
+    background: var(--accent); border-color: var(--accent);
+    color: #060a11; font-weight: 700;
+    box-shadow: 0 0 20px rgba(0,212,255,0.32);
+}
+
+/* ── Filter bar ── */
+.filter-section {
+    display: flex; flex-wrap: wrap; gap: 20px;
+    align-items: flex-end; padding: 20px 24px;
+}
+.filter-group-label {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 8px;
+}
+.filter-btn-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.filter-btn {
+    font-family: 'DM Mono', monospace; font-size: 0.69rem; letter-spacing: 0.07em;
+    padding: 7px 16px; border-radius: 100px;
+    border: 1px solid var(--border-subtle);
+    background: transparent; color: var(--text-muted);
+    cursor: pointer; transition: all 0.2s;
+}
+.filter-btn:hover { border-color: rgba(255,255,255,0.2); color: var(--text-primary); }
+.filter-btn.yr-active {
+    background: var(--accent); border-color: var(--accent);
+    color: #060a11; font-weight: 700;
+    box-shadow: 0 0 18px rgba(0,212,255,0.3);
+}
+.filter-btn.sn-active {
+    background: var(--accent-2); border-color: var(--accent-2);
+    color: white; font-weight: 700;
+    box-shadow: 0 0 18px rgba(124,58,237,0.3);
+}
+.hint-bar {
+    font-family: 'DM Mono', monospace; font-size: 0.63rem;
+    letter-spacing: 0.1em; color: var(--text-dim);
+    display: flex; align-items: center; gap: 6px;
+}
+.hint-bar i { color: var(--accent); opacity: .5; }
+
+/* ── KPI Cards ── */
+.kpi-card { padding: 24px 26px; position: relative; overflow: hidden; }
+.kpi-glow {
+    position: absolute; top: -30%; right: -15%;
+    width: 160px; height: 160px; border-radius: 50%;
+    opacity: 0.06; transition: opacity 0.3s;
+    pointer-events: none;
+}
+.kpi-card:hover .kpi-glow { opacity: 0.13; }
+.k1 .kpi-glow { background: var(--accent); }
+.k2 .kpi-glow { background: var(--accent-2); }
+.k3 .kpi-glow { background: var(--accent-3); }
+.k4 .kpi-glow { background: var(--accent-4); }
+.kpi-label {
+    font-family: 'DM Mono', monospace; font-size: 0.66rem;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted);
+}
+.kpi-value {
+    font-family: 'Syne', sans-serif; font-size: 2.1rem;
+    font-weight: 800; line-height: 1.1; margin: 8px 0 4px;
+    background: linear-gradient(135deg, #e8edf5, var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.k2 .kpi-value { background: linear-gradient(135deg,#e8edf5,var(--accent-2)); -webkit-background-clip:text; background-clip:text; }
+.k3 .kpi-value { background: linear-gradient(135deg,#e8edf5,var(--accent-3)); -webkit-background-clip:text; background-clip:text; }
+.k4 .kpi-value { background: linear-gradient(135deg,#e8edf5,var(--accent-4)); -webkit-background-clip:text; background-clip:text; }
+.kpi-sub { font-size: 0.73rem; color: var(--text-muted); }
+.kpi-icon { position: absolute; top: 22px; right: 22px; font-size: 1.45rem; opacity: 0.1; }
+.yoy-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-family: 'DM Mono', monospace; font-size: 0.63rem;
+    padding: 2px 9px; border-radius: 100px; margin-top: 6px;
+    font-weight: 500; letter-spacing: 0.05em;
+}
+.yoy-up { background: rgba(16,185,129,0.12); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+.yoy-down { background: rgba(244,63,94,0.1); color: #fb7185; border: 1px solid rgba(244,63,94,0.2); }
+
+/* ── Hot Roles Strip ── */
+.hot-strip { padding: 22px 26px; }
+.hot-strip-title {
+    font-family: 'DM Mono', monospace; font-size: 0.66rem;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+}
+.hot-strip-title::after { content: ''; flex: 1; height: 1px; background: var(--border-subtle); }
+.hot-roles-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.hot-role-pill {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-radius: 14px;
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle);
+    cursor: pointer; transition: all 0.22s; flex: 1; min-width: 180px;
+}
+.hot-role-pill:hover { border-color: rgba(249,115,22,0.3); background: rgba(249,115,22,0.06); transform: translateY(-1px); }
+.hot-rank {
+    font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 800;
+    color: var(--accent-3); width: 22px; text-align: center; flex-shrink: 0;
+}
+.hot-role-info { flex: 1; min-width: 0; }
+.hot-role-name { font-size: 0.8rem; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hot-role-meta { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; }
+.hot-demand-bar { width: 42px; flex-shrink: 0; }
+.hot-demand-bar-bg { height: 4px; background: rgba(255,255,255,0.06); border-radius: 100px; }
+.hot-demand-bar-fill { height: 4px; background: linear-gradient(90deg, var(--accent-3), #fbbf24); border-radius: 100px; transition: width 0.6s; }
+.hot-demand-pct { font-family: 'DM Mono', monospace; font-size: 0.58rem; color: var(--accent-3); margin-top: 3px; text-align: right; }
+
+/* ── Charts ── */
+.chart-card { padding: 26px; }
+.chart-card-title {
+    font-family: 'Syne', sans-serif; font-size: 1rem;
+    font-weight: 700; color: var(--text-primary); margin-bottom: 4px;
+}
+.accent-divider { width: 36px; height: 3px; background: linear-gradient(90deg,var(--accent),transparent); border-radius: 100px; margin: 6px 0 14px; }
+.chart-card-sub {
+    font-family: 'DM Mono', monospace; font-size: 0.63rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-bottom: 18px;
+}
+.chart-container { position: relative; height: 280px; }
+.remote-bar-wrap { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border-subtle); }
+.remote-bar-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.remote-bar-label span:first-child {
+    font-family: 'DM Mono', monospace; font-size: 0.66rem;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted);
+}
+.remote-pct-badge { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: #22c55e; }
+.custom-progress { height: 5px; background: rgba(255,255,255,0.05); border-radius: 100px; overflow: hidden; }
+.custom-progress-bar {
+    height: 100%; background: linear-gradient(90deg,#22c55e,#00d4ff);
+    border-radius: 100px; transition: width 0.75s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 0 8px rgba(0,212,255,0.25);
+}
+
+/* ── Table ── */
+.table-section { padding: 26px; }
+.table-header-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 18px; flex-wrap: wrap; gap: 12px;
+}
+.table-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem; }
+.table-actions { display: flex; gap: 8px; align-items: center; }
+.record-count-badge {
+    font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.08em;
+    padding: 4px 14px; border-radius: 100px;
+    background: rgba(0,212,255,0.07); border: 1px solid rgba(0,212,255,0.18); color: var(--accent);
+}
+.export-btn {
+    font-family: 'DM Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 100px; cursor: pointer; transition: all 0.2s;
+    background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); color: #34d399;
+    display: flex; align-items: center; gap: 6px;
+}
+.export-btn:hover { background: rgba(16,185,129,0.15); border-color: rgba(16,185,129,0.4); transform: translateY(-1px); }
+.export-btn i { font-size: 0.7rem; }
+
+/* Table scroll & sticky header */
+.table-scroll { max-height: 500px; overflow-y: auto; overflow-x: auto; }
+.table-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+.table-scroll::-webkit-scrollbar-track { background: transparent; }
+.table-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 100px; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table thead { position: sticky; top: 0; z-index: 4; }
+.data-table thead th {
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-dim); padding: 10px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    font-weight: 500; background: #0c1220;
+    cursor: pointer; user-select: none; white-space: nowrap;
+    transition: color 0.2s;
+}
+.data-table thead th:hover { color: var(--text-muted); }
+.data-table thead th .sort-icon { margin-left: 5px; opacity: 0.35; font-size: 0.58rem; }
+.data-table thead th.sort-asc .sort-icon,
+.data-table thead th.sort-desc .sort-icon { opacity: 1; color: var(--accent); }
+.data-table tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.025);
+    cursor: pointer; transition: background 0.13s;
+}
+.data-table tbody tr:hover { background: rgba(0,212,255,0.035); }
+.data-table tbody tr:hover td:first-child { color: var(--accent); }
+.data-table tbody td {
+    padding: 11px 14px; font-size: 0.84rem;
+    color: var(--text-primary); vertical-align: middle;
+    transition: color 0.13s;
+}
+.data-table tbody td:first-child { font-weight: 500; }
+
+/* Chips */
+.seniority-chip {
+    font-family: 'DM Mono', monospace; font-size: 0.61rem;
+    letter-spacing: 0.07em; padding: 3px 10px; border-radius: 100px; font-weight: 500;
+}
+.chip-senior { background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.2); }
+.chip-mid { background: rgba(234,179,8,0.12); color: #fbbf24; border: 1px solid rgba(234,179,8,0.2); }
+.chip-junior { background: rgba(0,212,255,0.09); color: var(--accent); border: 1px solid rgba(0,212,255,0.18); }
+.sector-chip {
+    font-family: 'DM Mono', monospace; font-size: 0.59rem;
+    padding: 2px 9px; border-radius: 100px;
+    border: 1px solid var(--border-subtle); color: var(--text-dim);
+}
+.company-pill {
+    font-family: 'DM Mono', monospace; font-size: 0.61rem;
+    padding: 3px 9px; border-radius: 100px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); color: var(--text-muted);
+}
+.salary-val { font-family: 'DM Mono', monospace; font-weight: 500; color: #4ade80; font-size: 0.82rem; }
+.demand-val { font-family: 'DM Mono', monospace; color: #fb923c; }
+.remote-val { font-family: 'DM Mono', monospace; color: var(--accent); }
+
+/* YoY in table */
+.yoy-inline {
+    font-family: 'DM Mono', monospace; font-size: 0.58rem;
+    margin-left: 5px; padding: 1px 6px; border-radius: 100px;
+}
+.yoy-inline.up { color: #34d399; background: rgba(16,185,129,0.1); }
+.yoy-inline.dn { color: #fb7185; background: rgba(244,63,94,0.1); }
+.yoy-inline.flat { color: var(--text-dim); background: rgba(255,255,255,0.04); }
+
+/* Demand mini-bar in table */
+.demand-cell { display: flex; align-items: center; gap: 8px; }
+.demand-mini-bar { width: 48px; height: 4px; background: rgba(255,255,255,0.06); border-radius: 100px; overflow: hidden; flex-shrink: 0; }
+.demand-mini-fill { height: 100%; background: linear-gradient(90deg,#f97316,#fbbf24); border-radius: 100px; }
+
+/* ── Search ── */
+.search-wrap { position: relative; }
+.search-input {
+    font-family: 'DM Mono', monospace; font-size: 0.74rem; letter-spacing: 0.04em;
+    padding: 8px 16px 8px 36px; border-radius: 100px;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle);
+    color: var(--text-primary); outline: none; width: 210px;
+    transition: border-color 0.2s, width 0.28s ease, background 0.2s;
+}
+.search-input::placeholder { color: var(--text-dim); }
+.search-input:focus {
+    border-color: rgba(0,212,255,0.3); width: 270px;
+    background: rgba(0,212,255,0.04);
+}
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 0.73rem; pointer-events: none; }
+
+/* ── Modal ── */
+.modal-content {
+    background: #0c1220 !important;
+    border: 1px solid rgba(0,212,255,0.22) !important;
+    border-radius: 20px !important; color: var(--text-primary) !important;
+    box-shadow: 0 0 100px rgba(0,212,255,0.1), 0 32px 80px rgba(0,0,0,0.7) !important;
+}
+.modal-header {
+    background: linear-gradient(135deg,rgba(0,212,255,0.07),rgba(124,58,237,0.07)) !important;
+    border-bottom: 1px solid var(--border-subtle) !important;
+    border-radius: 20px 20px 0 0 !important; padding: 18px 24px !important;
+}
+.modal-title { font-family: 'Syne', sans-serif !important; font-weight: 700 !important; font-size: 0.98rem !important; color: var(--text-primary) !important; }
+.btn-close-white { filter: invert(1) !important; }
+.modal-body { padding: 22px 24px !important; }
+.modal-footer { border-top: 1px solid var(--border-subtle) !important; padding: 14px 24px !important; }
+.modal-company-tag {
+    display: inline-block; font-family: 'DM Mono', monospace; font-size: 0.7rem;
+    padding: 5px 13px; margin: 3px; border-radius: 100px;
+    background: rgba(0,212,255,0.07); border: 1px solid rgba(0,212,255,0.18);
+    color: var(--accent); letter-spacing: 0.04em; transition: all 0.2s;
+}
+.modal-company-tag:hover { background: rgba(0,212,255,0.14); }
+.modal-role-name { font-family: 'Syne', sans-serif; font-size: 0.84rem; font-weight: 600; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.modal-stat-row { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0 0; }
+.modal-stat {
+    flex: 1; min-width: 78px; background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-subtle); border-radius: 12px; padding: 12px; text-align: center;
+}
+.modal-stat-num { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; }
+.modal-stat-lbl { font-family: 'DM Mono', monospace; font-size: 0.59rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); margin-top: 3px; }
+.modal-sub { font-family: 'DM Mono', monospace; font-size: 0.63rem; letter-spacing: 0.07em; color: var(--text-dim); margin-top: 16px; }
+.btn-close-modal {
+    font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 8px 20px; border-radius: 100px; cursor: pointer; transition: all 0.2s;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); color: var(--text-muted);
+}
+.btn-close-modal:hover { border-color: rgba(255,255,255,0.2); color: var(--text-primary); }
+
+/* ── Footer ── */
+.site-footer {
+    padding: 40px 0 32px; text-align: center;
+    font-family: 'DM Mono', monospace; font-size: 0.63rem;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim);
+}
+.site-footer span { color: var(--text-muted); }
+
+/* ── Animations ── */
+@keyframes fadeInUp { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:translateY(0); } }
+.animate-in { animation: fadeInUp 0.55s ease both; }
+.delay-1 { animation-delay: .1s; }
+.delay-2 { animation-delay: .2s; }
+.delay-3 { animation-delay: .3s; }
+.delay-4 { animation-delay: .4s; }
+.delay-5 { animation-delay: .5s; }
+
+/* ── Empty state ── */
+.empty-state {
+    text-align: center; padding: 52px 20px;
+    font-family: 'DM Mono', monospace;
+}
+.empty-state-icon { font-size: 2rem; opacity: 0.2; margin-bottom: 12px; }
+.empty-state-title { font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-dim); }
+.empty-state-sub { font-size: 0.7rem; color: rgba(58,69,96,0.6); margin-top: 6px; }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+    .wrap { padding: 0 14px; }
+    .chart-container { height: 210px; }
+    .kpi-value { font-size: 1.7rem !important; }
+    .filter-section { padding: 14px; gap: 14px; }
+    .search-input { width: 160px; }
+    .search-input:focus { width: 180px; }
+    .sector-tabs { padding: 14px; gap: 6px; }
+    .hot-role-pill { min-width: 140px; }
+    .table-header-row { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header class="site-header animate-in">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+        <div>
+            <div class="header-eyebrow">
+                <span class="live-dot"></span>
+                <span>Global Job Market Intelligence</span>
+                <span style="color:var(--text-dim)">·</span>
+                <span id="totalEntriesCount">0</span>
+                <span style="color:var(--text-dim)">data points</span>
+            </div>
+            <h1 class="site-title">Career<span>Pulse</span><br><em>Analyzer</em></h1>
+            <p class="header-meta">Salary trends · demand signals · remote ratios · 2023–2025</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap align-items-start mt-2">
+            <span class="pill-badge active-pill"><i class="fas fa-briefcase me-1"></i>50 roles</span>
+            <span class="pill-badge"><i class="fas fa-industry me-1"></i>12 sectors</span>
+            <span class="pill-badge"><i class="fas fa-chart-simple me-1"></i>live filters</span>
+            <span class="pill-badge"><i class="fas fa-sort me-1"></i>sortable</span>
+        </div>
+    </div>
+</header>
+
+<!-- SECTOR TABS -->
+<div class="glass-card mb-3 animate-in delay-1">
+    <div class="sector-tabs" id="sectorTabs">
+        <button class="sector-tab active" data-sector="all">🌐 All Sectors</button>
+        <button class="sector-tab" data-sector="Technology">💻 Technology</button>
+        <button class="sector-tab" data-sector="Healthcare">🏥 Healthcare</button>
+        <button class="sector-tab" data-sector="Finance">💰 Finance</button>
+        <button class="sector-tab" data-sector="Engineering">⚙️ Engineering</button>
+        <button class="sector-tab" data-sector="Legal">⚖️ Legal</button>
+        <button class="sector-tab" data-sector="Education">🎓 Education</button>
+        <button class="sector-tab" data-sector="Creative">🎨 Creative</button>
+        <button class="sector-tab" data-sector="Business">📊 Business</button>
+        <button class="sector-tab" data-sector="Trades">🔧 Trades</button>
+        <button class="sector-tab" data-sector="Science">🔬 Science</button>
+        <button class="sector-tab" data-sector="Hospitality">🍽️ Hospitality</button>
+        <button class="sector-tab" data-sector="Media">📡 Media</button>
+    </div>
+</div>
+
+<!-- FILTERS -->
+<div class="glass-card filter-section animate-in delay-1 mb-4">
+    <div>
+        <div class="filter-group-label">Year</div>
+        <div class="filter-btn-group" id="yearFilters">
+            <button class="filter-btn year-filter yr-active" data-year="2025">2025</button>
+            <button class="filter-btn year-filter" data-year="2024">2024</button>
+            <button class="filter-btn year-filter" data-year="2023">2023</button>
+        </div>
+    </div>
+    <div>
+        <div class="filter-group-label">Seniority</div>
+        <div class="filter-btn-group" id="seniorityFilters">
+            <button class="filter-btn senior-filter sn-active" data-seniority="all">All Levels</button>
+            <button class="filter-btn senior-filter" data-seniority="Junior">Junior</button>
+            <button class="filter-btn senior-filter" data-seniority="Mid">Mid-Level</button>
+            <button class="filter-btn senior-filter" data-seniority="Senior">Senior</button>
+        </div>
+    </div>
+    <div class="ms-auto align-self-end">
+        <div class="search-wrap">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" id="searchInput" placeholder="Search role…" aria-label="Search roles">
+        </div>
+    </div>
+    <div class="hint-bar align-self-end">
+        <i class="fas fa-mouse-pointer"></i>
+        <span>Click bars or rows for details</span>
+    </div>
+</div>
+
+<!-- KPI CARDS -->
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3 animate-in delay-2">
+        <div class="glass-card kpi-card k1">
+            <div class="kpi-glow"></div>
+            <div class="kpi-label">Avg Salary (USD)</div>
+            <div class="kpi-value" id="avgSalaryKpi">$0</div>
+            <div class="kpi-sub">Demand-weighted</div>
+            <div id="salaryYoY"></div>
+            <i class="fas fa-dollar-sign kpi-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 animate-in delay-3">
+        <div class="glass-card kpi-card k2">
+            <div class="kpi-glow"></div>
+            <div class="kpi-label">Remote Jobs</div>
+            <div class="kpi-value" id="remotePctKpi">0%</div>
+            <div class="kpi-sub">Offer remote work</div>
+            <div id="remoteYoY"></div>
+            <i class="fas fa-laptop-house kpi-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 animate-in delay-4">
+        <div class="glass-card kpi-card k3">
+            <div class="kpi-glow"></div>
+            <div class="kpi-label">Top Demand Role</div>
+            <div class="kpi-value" id="topRoleKpi" style="font-size:1.1rem;min-height:2.5rem;">—</div>
+            <div class="kpi-sub">Highest demand signal</div>
+            <i class="fas fa-fire kpi-icon"></i>
+        </div>
+    </div>
+    <div class="col-6 col-md-3 animate-in delay-5">
+        <div class="glass-card kpi-card k4">
+            <div class="kpi-glow"></div>
+            <div class="kpi-label">Roles Listed</div>
+            <div class="kpi-value" id="rolesKpi">0</div>
+            <div class="kpi-sub">Unique job titles</div>
+            <i class="fas fa-briefcase kpi-icon"></i>
+        </div>
+    </div>
+</div>
+
+<!-- HOT ROLES STRIP -->
+<div class="glass-card mb-4 animate-in delay-3">
+    <div class="hot-strip">
+        <div class="hot-strip-title"><i class="fas fa-fire-flame-curved" style="color:var(--accent-3)"></i> Top Demand Roles</div>
+        <div class="hot-roles-row" id="hotRolesRow"></div>
+    </div>
+</div>
+
+<!-- CHARTS ROW -->
+<div class="row g-3 mb-4">
+    <div class="col-lg-7 animate-in delay-3">
+        <div class="glass-card chart-card h-100">
+            <div class="chart-card-title">Average Salary by Role</div>
+            <div class="accent-divider"></div>
+            <div class="chart-card-sub">USD · sorted by compensation · click bar for details</div>
+            <div class="chart-container"><canvas id="salaryChart" role="img" aria-label="Salary by role bar chart"></canvas></div>
+        </div>
+    </div>
+    <div class="col-lg-5 animate-in delay-4">
+        <div class="glass-card chart-card h-100">
+            <div class="chart-card-title">Demand % by Role</div>
+            <div class="accent-divider"></div>
+            <div class="chart-card-sub">Market demand signal · filtered view</div>
+            <div class="chart-container"><canvas id="demandChart" role="img" aria-label="Demand by role bar chart"></canvas></div>
+            <div class="remote-bar-wrap">
+                <div class="remote-bar-label">
+                    <span>Remote Work Ratio</span>
+                    <span class="remote-pct-badge" id="remoteLabel">0%</span>
+                </div>
+                <div class="custom-progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    <div class="custom-progress-bar" id="remoteProgressBar" style="width:0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="glass-card table-section animate-in delay-5 mb-4">
+    <div class="table-header-row">
+        <div>
+            <div class="table-title">Full Job Market Breakdown</div>
+            <div style="font-size:0.73rem;color:var(--text-dim);margin-top:2px;">All matching entries · click column headers to sort</div>
+        </div>
+        <div class="table-actions">
+            <span class="record-count-badge"><span id="recordCount">0</span> records</span>
+            <button class="export-btn" id="exportBtn" title="Export current view as CSV">
+                <i class="fas fa-download"></i> Export CSV
+            </button>
+        </div>
+    </div>
+    <div class="table-scroll">
+        <table class="data-table" id="dataTable">
+            <thead>
+                <tr>
+                    <th data-col="role" data-type="str">Job Role <span class="sort-icon">↕</span></th>
+                    <th data-col="sector" data-type="str">Sector <span class="sort-icon">↕</span></th>
+                    <th data-col="seniority" data-type="str">Level <span class="sort-icon">↕</span></th>
+                    <th data-col="salary" data-type="num">Avg Salary <span class="sort-icon">↕</span></th>
+                    <th data-col="demandPct" data-type="num">Demand <span class="sort-icon">↕</span></th>
+                    <th data-col="remotePct" data-type="num">Remote <span class="sort-icon">↕</span></th>
+                    <th>Top Employers</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">⏳</div><div class="empty-state-title">Loading data…</div></div></td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer class="site-footer">
+    <span>CareerPulse Analyzer</span> · Global job market data · 50 roles · 12 sectors · 2023–2025
+</footer>
+</div>
+
+<!-- MODAL -->
+<div class="modal fade" id="companyModal" tabindex="-1" aria-label="Role details">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title"><i class="fas fa-briefcase me-2" style="color:var(--accent)"></i>Role Details</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBody">Loading…</div>
+            <div class="modal-footer">
+                <button type="button" class="btn-close-modal" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+'use strict';
+// ═══════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════
+const JOBS = [
+    // Technology
+    { role:"Software Developer",          sector:"Technology",   baseSalary:90000,  demandBase:38, remoteBase:70, companies:["Google","Microsoft","Amazon","Meta","Apple","Stripe","GitHub","Shopify","Atlassian","Figma"] },
+    { role:"AI / ML Engineer",            sector:"Technology",   baseSalary:118000, demandBase:44, remoteBase:72, companies:["OpenAI","Anthropic","DeepMind","Nvidia","Meta AI","Cohere","Scale AI","HuggingFace","Mistral","Stability"] },
+    { role:"Cybersecurity Analyst",       sector:"Technology",   baseSalary:96000,  demandBase:40, remoteBase:62, companies:["CrowdStrike","Palo Alto Networks","Okta","Cloudflare","Zscaler","Fortinet","IBM Security","Mandiant","SentinelOne","Darktrace"] },
+    { role:"Cloud Architect",             sector:"Technology",   baseSalary:115000, demandBase:42, remoteBase:68, companies:["AWS","Microsoft Azure","Google Cloud","IBM Cloud","Oracle","VMware","Rackspace","Accenture","Deloitte","Cognizant"] },
+    { role:"Data Scientist",              sector:"Technology",   baseSalary:105000, demandBase:36, remoteBase:65, companies:["Google","Meta","Netflix","Spotify","Uber","Airbnb","LinkedIn","Twitter","Palantir","Databricks"] },
+    { role:"UX / Product Designer",       sector:"Technology",   baseSalary:88000,  demandBase:30, remoteBase:66, companies:["Apple","Google","Figma","Adobe","Airbnb","Spotify","Dropbox","Slack","Zoom","Canva"] },
+    { role:"DevOps Engineer",             sector:"Technology",   baseSalary:98000,  demandBase:38, remoteBase:70, companies:["GitLab","Docker","HashiCorp","Cloudflare","Datadog","PagerDuty","Atlassian","DigitalOcean","Red Hat","Splunk"] },
+    { role:"Product Manager",             sector:"Technology",   baseSalary:112000, demandBase:34, remoteBase:60, companies:["Microsoft","Google","Meta","Apple","Amazon","Netflix","Adobe","Salesforce","Atlassian","ServiceNow"] },
+    // Healthcare
+    { role:"Registered Nurse",            sector:"Healthcare",   baseSalary:78000,  demandBase:50, remoteBase:12, companies:["Mayo Clinic","Cleveland Clinic","Johns Hopkins","Kaiser Permanente","HCA Healthcare","Ascension","CommonSpirit","Tenet Healthcare","Mass General","NYU Langone"] },
+    { role:"Physician / Doctor",          sector:"Healthcare",   baseSalary:220000, demandBase:42, remoteBase:18, companies:["Mayo Clinic","Cleveland Clinic","Johns Hopkins","Kaiser Permanente","HCA Healthcare","Mercy Health","Geisinger","Advocate Aurora","Intermountain","Banner Health"] },
+    { role:"Pharmacist",                  sector:"Healthcare",   baseSalary:128000, demandBase:30, remoteBase:20, companies:["CVS Health","Walgreens","Rite Aid","Costco","Walmart Pharmacy","Express Scripts","OptumRx","Diplomat Pharmacy","Humana","Cigna"] },
+    { role:"Physical Therapist",          sector:"Healthcare",   baseSalary:90000,  demandBase:35, remoteBase:10, companies:["ATI Physical Therapy","Select Medical","Kindred Healthcare","HealthSouth","Genesis HealthCare","Brooks Rehabilitation","Athletico","US Physical Therapy","NovaCare","Concentra"] },
+    { role:"Medical Laboratory Scientist",sector:"Healthcare",   baseSalary:68000,  demandBase:28, remoteBase:5,  companies:["Quest Diagnostics","LabCorp","ARUP Laboratories","Mayo Medical Labs","BioReference","Sonic Healthcare","ACM Medical","Miraca Life Sciences","NeoGenomics","Foundation Medicine"] },
+    { role:"Psychologist / Therapist",    sector:"Healthcare",   baseSalary:82000,  demandBase:38, remoteBase:45, companies:["Talkspace","BetterHelp","Lyra Health","Spring Health","Headspace Health","SonderMind","LifeStance","Optum Behavioral","AbleTo","Teladoc Health"] },
+    // Finance
+    { role:"Financial Analyst",           sector:"Finance",      baseSalary:92000,  demandBase:34, remoteBase:50, companies:["Goldman Sachs","JPMorgan Chase","Morgan Stanley","BlackRock","Fidelity","Vanguard","Charles Schwab","Citigroup","Bank of America","Wells Fargo"] },
+    { role:"Investment Banker",           sector:"Finance",      baseSalary:160000, demandBase:28, remoteBase:30, companies:["Goldman Sachs","Morgan Stanley","J.P. Morgan","Lazard","Evercore","Moelis & Co","Houlihan Lokey","Jefferies","Centerview Partners","PJT Partners"] },
+    { role:"Accountant / CPA",            sector:"Finance",      baseSalary:75000,  demandBase:36, remoteBase:48, companies:["Deloitte","PwC","KPMG","Ernst & Young","BDO","Grant Thornton","RSM","Crowe","Moss Adams","CohnReznick"] },
+    { role:"Actuary",                     sector:"Finance",      baseSalary:108000, demandBase:26, remoteBase:42, companies:["Aon","Mercer","Milliman","Willis Towers Watson","Prudential","MetLife","New York Life","Lincoln Financial","Principal Financial","Zurich Insurance"] },
+    { role:"Risk Manager",                sector:"Finance",      baseSalary:118000, demandBase:30, remoteBase:45, companies:["JPMorgan Chase","Citigroup","HSBC","Deutsche Bank","UBS","Barclays","BNP Paribas","Société Générale","Standard Chartered","Nomura"] },
+    // Engineering
+    { role:"Mechanical Engineer",         sector:"Engineering",  baseSalary:86000,  demandBase:32, remoteBase:28, companies:["Boeing","Lockheed Martin","Raytheon","General Electric","Siemens","Tesla","SpaceX","Northrop Grumman","Honeywell","Caterpillar"] },
+    { role:"Civil Engineer",              sector:"Engineering",  baseSalary:80000,  demandBase:30, remoteBase:20, companies:["AECOM","Jacobs","WSP","HDR","Stantec","Parsons","Bechtel","Fluor","Turner Construction","Skanska"] },
+    { role:"Electrical Engineer",         sector:"Engineering",  baseSalary:94000,  demandBase:34, remoteBase:30, companies:["Siemens","ABB","Eaton","Schneider Electric","Emerson","Honeywell","GE Power","Rockwell Automation","Parker Hannifin","TE Connectivity"] },
+    { role:"Chemical Engineer",           sector:"Engineering",  baseSalary:98000,  demandBase:26, remoteBase:22, companies:["BASF","Dow Chemical","ExxonMobil","Chevron","Shell","DuPont","3M","Air Products","Praxair","Linde"] },
+    { role:"Aerospace Engineer",          sector:"Engineering",  baseSalary:108000, demandBase:24, remoteBase:25, companies:["Boeing","SpaceX","Lockheed Martin","Northrop Grumman","Raytheon","NASA","Airbus","Blue Origin","Rolls-Royce","Pratt & Whitney"] },
+    // Legal
+    { role:"Lawyer / Attorney",           sector:"Legal",        baseSalary:145000, demandBase:28, remoteBase:38, companies:["Latham & Watkins","Baker McKenzie","Skadden Arps","Kirkland & Ellis","Sidley Austin","Clifford Chance","Freshfields","Allen & Overy","White & Case","DLA Piper"] },
+    { role:"Paralegal",                   sector:"Legal",        baseSalary:55000,  demandBase:26, remoteBase:40, companies:["Deloitte Legal","PwC Legal","KPMG Law","EY Law","Baker McKenzie","Legalzoom","Axiom","Elevate Services","UnitedLex","Factor"] },
+    { role:"Compliance Officer",          sector:"Legal",        baseSalary:95000,  demandBase:32, remoteBase:48, companies:["JPMorgan Chase","Goldman Sachs","Citigroup","HSBC","AIG","MetLife","Prudential","Vanguard","BlackRock","State Street"] },
+    // Education
+    { role:"Teacher / Educator",          sector:"Education",    baseSalary:56000,  demandBase:32, remoteBase:22, companies:["NYC Dept of Education","LAUSD","Chicago Public Schools","Teach For America","KIPP","Success Academy","Achievement First","IDEA Public Schools","Relay GSE","Khan Academy"] },
+    { role:"University Professor",        sector:"Education",    baseSalary:94000,  demandBase:22, remoteBase:30, companies:["MIT","Harvard","Stanford","Columbia","UCLA","UT Austin","Michigan","NYU","USC","Penn State"] },
+    { role:"Instructional Designer",      sector:"Education",    baseSalary:72000,  demandBase:28, remoteBase:62, companies:["Coursera","Udemy","LinkedIn Learning","Pluralsight","2U","Guild Education","Chegg","Pearson","McGraw-Hill","Khan Academy"] },
+    // Creative
+    { role:"Graphic Designer",            sector:"Creative",     baseSalary:62000,  demandBase:26, remoteBase:58, companies:["Adobe","Canva","Figma","Apple","Google","Nike","BBDO","Ogilvy","Publicis","WPP"] },
+    { role:"Content Writer / Copywriter", sector:"Creative",     baseSalary:60000,  demandBase:30, remoteBase:72, companies:["HubSpot","Contently","Scripted","Verblio","Skyword","Compose.ly","nDash","ClearVoice","Conductor","BrightEdge"] },
+    { role:"Video Producer / Editor",     sector:"Creative",     baseSalary:68000,  demandBase:28, remoteBase:55, companies:["Netflix","YouTube","Disney","Hulu","Viacom","Warner Bros","NBCUniversal","A24","Lionsgate","Pixar"] },
+    { role:"Architect",                   sector:"Creative",     baseSalary:82000,  demandBase:24, remoteBase:30, companies:["Gensler","HOK","Perkins & Will","NBBJ","SOM","Henning Larsen","AECOM","Arup","Zaha Hadid","Foster + Partners"] },
+    // Business
+    { role:"Marketing Manager",           sector:"Business",     baseSalary:82000,  demandBase:34, remoteBase:55, companies:["HubSpot","Salesforce","Adobe","Mailchimp","Marketo","Sprout Social","Hootsuite","Semrush","Moz","Bazaarvoice"] },
+    { role:"Human Resources Manager",     sector:"Business",     baseSalary:78000,  demandBase:30, remoteBase:48, companies:["Workday","ADP","Paychex","BambooHR","SuccessFactors","Mercer","Willis Towers Watson","Aon Hewitt","Korn Ferry","Randstad"] },
+    { role:"Supply Chain Manager",        sector:"Business",     baseSalary:92000,  demandBase:34, remoteBase:38, companies:["Amazon","Walmart","FedEx","UPS","DHL","Maersk","XPO Logistics","C.H. Robinson","J.B. Hunt","Kuehne+Nagel"] },
+    { role:"Operations Manager",          sector:"Business",     baseSalary:86000,  demandBase:32, remoteBase:35, companies:["Amazon","Walmart","Target","Home Depot","Costco","FedEx","UPS","GE","Honeywell","3M"] },
+    { role:"Sales Representative",        sector:"Business",     baseSalary:72000,  demandBase:36, remoteBase:52, companies:["Salesforce","Oracle","SAP","HubSpot","Microsoft","Adobe","ServiceNow","Zendesk","DocuSign","Twilio"] },
+    // Trades
+    { role:"Electrician",                 sector:"Trades",       baseSalary:62000,  demandBase:38, remoteBase:2,  companies:["Quanta Services","MYR Group","Eckart Electric","Faith Technologies","Rosendin Electric","Cupertino Electric","Baker Electric","Morrow-Meadows","Royal Electric","Bergelectric"] },
+    { role:"Plumber",                     sector:"Trades",       baseSalary:58000,  demandBase:34, remoteBase:2,  companies:["Roto-Rooter","ServiceMaster","Mr. Rooter","Lee Company","Ygrene","Comfort Systems","Limbach","EMCOR","Willowbrook","Premier Industries"] },
+    { role:"HVAC Technician",             sector:"Trades",       baseSalary:56000,  demandBase:34, remoteBase:2,  companies:["Carrier","Trane","Lennox","Daikin","Johnson Controls","York","Nordyne","American Standard","Rheem","Bryant"] },
+    { role:"Welder",                      sector:"Trades",       baseSalary:52000,  demandBase:30, remoteBase:2,  companies:["Lincoln Electric","Miller Electric","ESAB","Hobart Brothers","Victor Technologies","Illinois Tool Works","Airgas","Matheson","Praxair","Air Liquide"] },
+    // Science
+    { role:"Research Scientist",          sector:"Science",      baseSalary:98000,  demandBase:28, remoteBase:35, companies:["Pfizer","Johnson & Johnson","Merck","Novartis","Roche","AstraZeneca","Genentech","Moderna","BioNTech","Regeneron"] },
+    { role:"Environmental Scientist",     sector:"Science",      baseSalary:72000,  demandBase:26, remoteBase:30, companies:["AECOM","Jacobs","Tetra Tech","WSP","Burns & McDonnell","CDM Smith","Arcadis","GHD","ICF","Ramboll"] },
+    { role:"Biomedical Engineer",         sector:"Science",      baseSalary:90000,  demandBase:28, remoteBase:28, companies:["Medtronic","Stryker","Boston Scientific","Abbott","Becton Dickinson","Zimmer Biomet","Edwards Lifesciences","Intuitive Surgical","Hologic","Baxter"] },
+    // Hospitality
+    { role:"Chef / Culinary Director",    sector:"Hospitality",  baseSalary:62000,  demandBase:26, remoteBase:2,  companies:["Marriott","Hilton","Four Seasons","Ritz-Carlton","Hyatt","InterContinental","Accor","Wyndham","MGM Resorts","Caesars Entertainment"] },
+    { role:"Hotel Manager",               sector:"Hospitality",  baseSalary:68000,  demandBase:24, remoteBase:5,  companies:["Marriott","Hilton","Four Seasons","Hyatt","IHG","Wyndham","Choice Hotels","Best Western","Radisson","Omni Hotels"] },
+    // Media
+    { role:"Journalist / Reporter",       sector:"Media",        baseSalary:58000,  demandBase:22, remoteBase:55, companies:["New York Times","Washington Post","BBC","Reuters","AP","Bloomberg","The Guardian","CNN","NPR","Vox Media"] },
+    { role:"Social Media Manager",        sector:"Media",        baseSalary:64000,  demandBase:32, remoteBase:65, companies:["Hootsuite","Sprout Social","Buffer","Later","Sprinklr","Brandwatch","Meta","TikTok","Twitter","Pinterest"] },
+    { role:"Public Relations Manager",    sector:"Media",        baseSalary:72000,  demandBase:26, remoteBase:50, companies:["Edelman","Weber Shandwick","Burson Cohn & Wolfe","FleishmanHillard","Hill+Knowlton","Ketchum","Porter Novelli","Ogilvy PR","APCO Worldwide","MSL Group"] },
+];
+
+const SENIORITIES = ["Junior","Mid","Senior"];
+const YEARS = [2023, 2024, 2025];
+
+// ── Deterministic shuffle using role name as seed (no random per render) ──
+function seededShuffle(arr, seed) {
+    const a = [...arr];
+    let s = seed;
+    for (let i = a.length - 1; i > 0; i--) {
+        s = (s * 1664525 + 1013904223) & 0xffffffff;
+        const j = Math.abs(s) % (i + 1);
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+function getCompanies(job, seniority, n = 4) {
+    const seed = job.role.split('').reduce((a, c) => a + c.charCodeAt(0), 0) + seniority.charCodeAt(0);
+    return seededShuffle(job.companies, seed).slice(0, n);
+}
+
+function calcSalary(base, seniority, year) {
+    const sm = seniority === "Junior" ? 0.72 : seniority === "Mid" ? 1.0 : 1.42;
+    const ym = year === 2025 ? 1.08 : year === 2024 ? 1.04 : 1.0;
+    return Math.round(base * sm * ym);
+}
+function calcDemand(base, seniority, year) {
+    let d = base + (seniority === "Senior" ? 7 : seniority === "Mid" ? 3 : 0)
+                 + (year === 2025 ? 5 : year === 2024 ? 2 : -3);
+    return Math.min(95, Math.max(10, d));
+}
+function calcRemote(base, seniority, year) {
+    let r = base + (seniority === "Senior" ? 6 : seniority === "Mid" ? 3 : 0)
+                 + (year === 2025 ? 8 : year === 2024 ? 4 : 0);
+    return Math.min(92, Math.max(2, r));
+}
+
+// Build flat data array ONCE
+const jobData = [];
+JOBS.forEach(j => {
+    SENIORITIES.forEach(sen => {
+        YEARS.forEach(yr => {
+            jobData.push({
+                role: j.role, sector: j.sector,
+                year: yr, seniority: sen,
+                salary: calcSalary(j.baseSalary, sen, yr),
+                demandPct: calcDemand(j.demandBase, sen, yr),
+                remotePct: calcRemote(j.remoteBase, sen, yr),
+                companies: getCompanies(j, sen, 4)
+            });
+        });
+    });
+});
+
+document.getElementById('totalEntriesCount').textContent = jobData.length;
+
+// ── State ──────────────────────────────────────────────────────
+let state = {
+    year: 2025, seniority: 'all', sector: 'all', search: '',
+    sortCol: 'salary', sortDir: 'desc'
+};
+let salaryChart, demandChart, bsModal;
+let searchDebounceTimer = null;
+let filteredCache = [];
+
+// ── Filter ─────────────────────────────────────────────────────
+function filterData() {
+    const q = state.search.toLowerCase();
+    return jobData.filter(d =>
+        d.year === state.year &&
+        (state.seniority === 'all' || d.seniority === state.seniority) &&
+        (state.sector === 'all' || d.sector === state.sector) &&
+        (!q || d.role.toLowerCase().includes(q) || d.sector.toLowerCase().includes(q))
+    );
+}
+
+// ── Sort ───────────────────────────────────────────────────────
+function sortData(data) {
+    return [...data].sort((a, b) => {
+        let va = a[state.sortCol], vb = b[state.sortCol];
+        if (typeof va === 'string') va = va.toLowerCase(), vb = vb.toLowerCase();
+        const dir = state.sortDir === 'asc' ? 1 : -1;
+        return va < vb ? -dir : va > vb ? dir : 0;
+    });
+}
+
+// ── Aggregate by role ──────────────────────────────────────────
+function aggregateByRole(filtered) {
+    const map = new Map();
+    filtered.forEach(d => {
+        if (!map.has(d.role)) map.set(d.role, { ts:0, n:0, td:0, tr:0, cos:new Set(), sector:d.sector });
+        const r = map.get(d.role);
+        r.ts += d.salary; r.n++; r.td += d.demandPct; r.tr += d.remotePct;
+        d.companies.forEach(c => r.cos.add(c));
+    });
+    return Array.from(map.entries()).map(([role, v]) => ({
+        role, sector: v.sector,
+        avgSalary: Math.round(v.ts / v.n),
+        avgDemand: Math.round(v.td / v.n),
+        avgRemote: Math.round(v.tr / v.n),
+        companies: Array.from(v.cos)
+    }));
+}
+
+// ── YoY comparison ─────────────────────────────────────────────
+function getYoYSalary(currentYear, seniority, sector) {
+    if (currentYear === 2023) return null;
+    const prevYear = currentYear - 1;
+    const filter = yr => jobData.filter(d =>
+        d.year === yr &&
+        (seniority === 'all' || d.seniority === seniority) &&
+        (sector === 'all' || d.sector === sector)
+    );
+    const avg = arr => {
+        let ts = 0, td = 0;
+        arr.forEach(d => { ts += d.salary * d.demandPct; td += d.demandPct; });
+        return td ? Math.round(ts / td) : 0;
+    };
+    const cur = avg(filter(currentYear));
+    const prv = avg(filter(prevYear));
+    if (!prv) return null;
+    return Math.round(((cur - prv) / prv) * 100);
+}
+
+// ── Animated counter ───────────────────────────────────────────
+function animCount(elId, to, prefix = '', suffix = '') {
+    const el = document.getElementById(elId);
+    if (!el) return;
+    const start = performance.now();
+    const dur = 650;
+    const from = parseFloat(el.dataset.cur || '0');
+    el.dataset.cur = to;
+    function tick(t) {
+        const p = Math.min((t - start) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 3);
+        el.textContent = prefix + Math.round(from + (to - from) * ease).toLocaleString() + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+}
+
+// ── Chart gradients ────────────────────────────────────────────
+function makeGradient(ctx, c1, c2) {
+    const g = ctx.createLinearGradient(0, 0, 0, 280);
+    g.addColorStop(0, c1); g.addColorStop(1, c2);
+    return g;
+}
+
+const chartBaseOpts = {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+        legend: { display: false },
+        tooltip: {
+            backgroundColor: 'rgba(10,15,28,0.97)',
+            borderColor: 'rgba(0,212,255,0.2)', borderWidth: 1,
+            titleFont: { family: 'DM Mono', size: 10 },
+            bodyFont: { family: 'DM Sans', size: 12 }, padding: 13,
+            cornerRadius: 10
+        }
+    },
+    scales: {
+        x: { ticks: { color: '#2e3a52', font: { family:'DM Mono', size:8 }, maxRotation: 45 }, grid: { color: 'rgba(255,255,255,0.025)' }, border: { color:'transparent' } },
+        y: { ticks: { color: '#2e3a52', font: { family:'DM Mono', size:9 } }, grid: { color: 'rgba(255,255,255,0.035)' }, border: { color:'transparent' } }
+    },
+    animation: { duration: 450, easing: 'easeOutQuart' }
+};
+
+// Init charts
+const salCtx = document.getElementById('salaryChart').getContext('2d');
+const demCtx = document.getElementById('demandChart').getContext('2d');
+
+salaryChart = new Chart(salCtx, {
+    type: 'bar',
+    data: { labels: [], datasets: [{ label: 'Avg Salary', data: [], backgroundColor: makeGradient(salCtx,'rgba(0,212,255,0.88)','rgba(124,58,237,0.5)'), borderRadius: 5, borderSkipped: false }] },
+    options: { ...chartBaseOpts, plugins: { ...chartBaseOpts.plugins, tooltip: { ...chartBaseOpts.plugins.tooltip, callbacks: { label: c => ' $' + c.raw.toLocaleString() } } } }
+});
+demandChart = new Chart(demCtx, {
+    type: 'bar',
+    data: { labels: [], datasets: [{ label: 'Demand %', data: [], backgroundColor: makeGradient(demCtx,'rgba(249,115,22,0.9)','rgba(234,179,8,0.5)'), borderRadius: 5, borderSkipped: false }] },
+    options: { ...chartBaseOpts, scales: { ...chartBaseOpts.scales, y: { ...chartBaseOpts.scales.y, max: 100 } }, plugins: { ...chartBaseOpts.plugins, tooltip: { ...chartBaseOpts.plugins.tooltip, callbacks: { label: c => ' ' + c.raw + '% demand' } } } }
+});
+
+// ── Modal ──────────────────────────────────────────────────────
+function showModal(role, companies, salary, demand, remote) {
+    const job = JOBS.find(j => j.role === role);
+    const sectorBadge = job ? `<span class="sector-chip" style="font-size:0.69rem;padding:3px 11px;">${job.sector}</span>` : '';
+    const tags = companies.map(c => `<span class="modal-company-tag"><i class="fas fa-building me-1"></i>${c}</span>`).join('');
+    document.getElementById('modalBody').innerHTML = `
+        <div class="modal-role-name">${sectorBadge}<span>${role}</span></div>
+        <div class="modal-stat-row">
+            <div class="modal-stat"><div class="modal-stat-num" style="color:#4ade80;">$${salary ? salary.toLocaleString() : '—'}</div><div class="modal-stat-lbl">Avg Salary</div></div>
+            <div class="modal-stat"><div class="modal-stat-num" style="color:#fb923c;">${demand || '—'}%</div><div class="modal-stat-lbl">Demand</div></div>
+            <div class="modal-stat"><div class="modal-stat-num" style="color:var(--accent);">${remote || '—'}%</div><div class="modal-stat-lbl">Remote</div></div>
+        </div>
+        <div style="margin-top:18px;margin-bottom:8px;font-family:'DM Mono',monospace;font-size:0.63rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-dim);">Top Hiring Companies</div>
+        <div>${tags}</div>
+        <p class="modal-sub">Based on ${jobData.length} data points · ${JOBS.length} roles · 12 sectors · 2023–2025</p>
+    `;
+    bsModal.show();
+}
+
+// ── Hot Roles ──────────────────────────────────────────────────
+function renderHotRoles(agg) {
+    const top = [...agg].sort((a, b) => b.avgDemand - a.avgDemand).slice(0, 3);
+    const container = document.getElementById('hotRolesRow');
+    container.innerHTML = top.map((r, i) => `
+        <div class="hot-role-pill" data-role="${r.role}" role="button" tabindex="0">
+            <div class="hot-rank">#${i + 1}</div>
+            <div class="hot-role-info">
+                <div class="hot-role-name">${r.role}</div>
+                <div class="hot-role-meta">$${r.avgSalary.toLocaleString()} · ${r.sector}</div>
+            </div>
+            <div class="hot-demand-bar">
+                <div class="hot-demand-bar-bg"><div class="hot-demand-bar-fill" style="width:${r.avgDemand}%"></div></div>
+                <div class="hot-demand-pct">${r.avgDemand}%</div>
+            </div>
+        </div>
+    `).join('');
+    container.querySelectorAll('.hot-role-pill').forEach(pill => {
+        const handler = () => {
+            const roleName = pill.dataset.role;
+            const entry = filteredCache.find(d => d.role === roleName);
+            if (entry) showModal(roleName, entry.companies, entry.salary, entry.demandPct, entry.remotePct);
+        };
+        pill.addEventListener('click', handler);
+        pill.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') handler(); });
+    });
+}
+
+// ── Table ──────────────────────────────────────────────────────
+function renderTable(filtered) {
+    const sorted = sortData(filtered);
+    if (!sorted.length) {
+        document.getElementById('tableBody').innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">🔍</div><div class="empty-state-title">No records match your filters</div><div class="empty-state-sub">Try adjusting sector, year, or seniority</div></div></td></tr>`;
+        return;
+    }
+    const prevYearSalaries = {};
+    if (state.year > 2023) {
+        jobData.filter(d => d.year === state.year - 1 &&
+            (state.seniority === 'all' || d.seniority === state.seniority) &&
+            (state.sector === 'all' || d.sector === state.sector)
+        ).forEach(d => {
+            if (!prevYearSalaries[d.role]) prevYearSalaries[d.role] = [];
+            prevYearSalaries[d.role].push(d.salary);
+        });
+    }
+
+    const tbody = document.getElementById('tableBody');
+    const fragment = document.createDocumentFragment();
+
+    sorted.forEach(d => {
+        const chip = d.seniority === 'Senior' ? 'chip-senior' : d.seniority === 'Mid' ? 'chip-mid' : 'chip-junior';
+        const cos = d.companies.slice(0, 2).map(c => `<span class="company-pill">${c}</span>`).join(' ');
+
+        let yoyHtml = '';
+        if (prevYearSalaries[d.role] && prevYearSalaries[d.role].length) {
+            const prevAvg = prevYearSalaries[d.role].reduce((a, b) => a + b, 0) / prevYearSalaries[d.role].length;
+            const pct = Math.round(((d.salary - prevAvg) / prevAvg) * 100);
+            if (Math.abs(pct) >= 1) {
+                const cls = pct > 0 ? 'up' : 'dn';
+                yoyHtml = `<span class="yoy-inline ${cls}">${pct > 0 ? '+' : ''}${pct}%</span>`;
+            }
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${d.role}</td>
+            <td><span class="sector-chip">${d.sector}</span></td>
+            <td><span class="seniority-chip ${chip}">${d.seniority}</span></td>
+            <td><span class="salary-val">$${d.salary.toLocaleString()}</span>${yoyHtml}</td>
+            <td>
+                <div class="demand-cell">
+                    <span class="demand-val">${d.demandPct}%</span>
+                    <div class="demand-mini-bar"><div class="demand-mini-fill" style="width:${d.demandPct}%"></div></div>
+                </div>
+            </td>
+            <td><span class="remote-val">${d.remotePct}%</span></td>
+            <td>${cos}</td>
+        `;
+        tr.addEventListener('click', () => showModal(d.role, d.companies, d.salary, d.demandPct, d.remotePct));
+        fragment.appendChild(tr);
+    });
+
+    tbody.innerHTML = '';
+    tbody.appendChild(fragment);
+}
+
+// ── Update sort header icons ───────────────────────────────────
+function updateSortHeaders() {
+    document.querySelectorAll('#dataTable thead th[data-col]').forEach(th => {
+        th.classList.remove('sort-asc', 'sort-desc');
+        const icon = th.querySelector('.sort-icon');
+        if (icon) icon.textContent = '↕';
+        if (th.dataset.col === state.sortCol) {
+            th.classList.add(state.sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+            if (icon) icon.textContent = state.sortDir === 'asc' ? '↑' : '↓';
+        }
+    });
+}
+
+// ── Main update ────────────────────────────────────────────────
+function updateDashboard() {
+    filteredCache = filterData();
+    const count = filteredCache.length;
+    document.getElementById('recordCount').textContent = count;
+
+    if (!count) {
+        document.getElementById('tableBody').innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="empty-state-icon">🔍</div><div class="empty-state-title">No records match your filters</div><div class="empty-state-sub">Try adjusting sector, year, or seniority</div></div></td></tr>`;
+        document.getElementById('hotRolesRow').innerHTML = '';
+        return;
+    }
+
+    const agg = aggregateByRole(filteredCache).sort((a, b) => b.avgSalary - a.avgSalary);
+    const topN = agg.slice(0, 20);
+
+    // Charts
+    salaryChart.data.labels = topN.map(a => a.role);
+    salaryChart.data.datasets[0].data = topN.map(a => a.avgSalary);
+    salaryChart.data.datasets[0].backgroundColor = makeGradient(salCtx,'rgba(0,212,255,0.88)','rgba(124,58,237,0.5)');
+    salaryChart.update();
+
+    demandChart.data.labels = topN.map(a => a.role);
+    demandChart.data.datasets[0].data = topN.map(a => a.avgDemand);
+    demandChart.data.datasets[0].backgroundColor = makeGradient(demCtx,'rgba(249,115,22,0.9)','rgba(234,179,8,0.5)');
+    demandChart.update();
+
+    // KPIs
+    let tw = 0, td = 0, tr = 0;
+    const roleMap = new Map();
+    filteredCache.forEach(d => {
+        tw += d.salary * d.demandPct; td += d.demandPct; tr += d.remotePct;
+        roleMap.set(d.role, (roleMap.get(d.role) || 0) + d.demandPct);
+    });
+    const avgSal = td ? Math.round(tw / td) : 0;
+    const remote = Math.round(tr / count);
+    let topRole = '', mx = 0;
+    for (const [r, v] of roleMap) if (v > mx) { mx = v; topRole = r; }
+    const uniqueRoles = new Set(filteredCache.map(d => d.role)).size;
+
+    animCount('avgSalaryKpi', avgSal, '$');
+    animCount('remotePctKpi', remote, '', '%');
+    animCount('rolesKpi', uniqueRoles);
+
+    const topEl = document.getElementById('topRoleKpi');
+    topEl.style.fontSize = topRole.length > 22 ? '0.88rem' : '1.1rem';
+    topEl.textContent = topRole || '—';
+
+    document.getElementById('remoteProgressBar').style.width = remote + '%';
+    document.getElementById('remoteLabel').textContent = remote + '% remote';
+
+    // YoY badges
+    const yoy = getYoYSalary(state.year, state.seniority, state.sector);
+    const salYoY = document.getElementById('salaryYoY');
+    const remYoY = document.getElementById('remoteYoY');
+    if (yoy !== null && state.year > 2023) {
+        const cls = yoy >= 0 ? 'yoy-up' : 'yoy-down';
+        salYoY.innerHTML = `<span class="yoy-badge ${cls}"><i class="fas fa-arrow-${yoy >= 0 ? 'up' : 'down'}"></i> ${yoy >= 0 ? '+' : ''}${yoy}% vs ${state.year - 1}</span>`;
+        // remote YoY estimate
+        const remYoYVal = state.year === 2025 ? 4 : state.year === 2024 ? 3 : 0;
+        remYoY.innerHTML = `<span class="yoy-badge yoy-up"><i class="fas fa-arrow-up"></i> +${remYoYVal}% vs ${state.year - 1}</span>`;
+    } else {
+        salYoY.innerHTML = '';
+        remYoY.innerHTML = '';
+    }
+
+    renderHotRoles(agg);
+    renderTable(filteredCache);
+    updateSortHeaders();
+}
+
+// ── Chart click handlers ───────────────────────────────────────
+function attachChartClicks() {
+    [salaryChart, demandChart].forEach(chart => {
+        chart.canvas.onclick = evt => {
+            const pts = chart.getElementsAtEventForMode(evt, 'nearest', { intersect: true }, true);
+            if (!pts.length) return;
+            const role = chart.data.labels[pts[0].index];
+            const entries = filteredCache.filter(d => d.role === role);
+            if (!entries.length) return;
+            const e = entries[0];
+            const allCos = [...new Set(entries.flatMap(d => d.companies))];
+            showModal(role, allCos, e.salary, e.demandPct, e.remotePct);
+        };
+    });
+}
+
+// ── Table sort ─────────────────────────────────────────────────
+document.querySelectorAll('#dataTable thead th[data-col]').forEach(th => {
+    th.addEventListener('click', () => {
+        const col = th.dataset.col;
+        if (state.sortCol === col) {
+            state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            state.sortCol = col;
+            state.sortDir = th.dataset.type === 'num' ? 'desc' : 'asc';
+        }
+        renderTable(filteredCache);
+        updateSortHeaders();
+    });
+});
+
+// ── CSV Export ─────────────────────────────────────────────────
+document.getElementById('exportBtn').addEventListener('click', () => {
+    const sorted = sortData(filteredCache);
+    const headers = ['Role','Sector','Seniority','Year','Avg Salary (USD)','Demand %','Remote %'];
+    const rows = sorted.map(d => [
+        `"${d.role}"`, d.sector, d.seniority, d.year,
+        d.salary, d.demandPct, d.remotePct
+    ]);
+    const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `careerpulse_${state.year}_${state.seniority}_${state.sector}.csv`;
+    document.body.appendChild(a); a.click();
+    document.body.removeChild(a); URL.revokeObjectURL(url);
+});
+
+// ── Event delegation ───────────────────────────────────────────
+document.getElementById('yearFilters').addEventListener('click', e => {
+    const btn = e.target.closest('.year-filter');
+    if (!btn) return;
+    document.querySelectorAll('.year-filter').forEach(b => b.classList.remove('yr-active'));
+    btn.classList.add('yr-active');
+    state.year = parseInt(btn.dataset.year);
+    updateDashboard();
+    setTimeout(attachChartClicks, 100);
+});
+
+document.getElementById('seniorityFilters').addEventListener('click', e => {
+    const btn = e.target.closest('.senior-filter');
+    if (!btn) return;
+    document.querySelectorAll('.senior-filter').forEach(b => b.classList.remove('sn-active'));
+    btn.classList.add('sn-active');
+    state.seniority = btn.dataset.seniority;
+    updateDashboard();
+    setTimeout(attachChartClicks, 100);
+});
+
+document.getElementById('sectorTabs').addEventListener('click', e => {
+    const btn = e.target.closest('.sector-tab');
+    if (!btn) return;
+    document.querySelectorAll('.sector-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    state.sector = btn.dataset.sector;
+    updateDashboard();
+    setTimeout(attachChartClicks, 100);
+});
+
+document.getElementById('searchInput').addEventListener('input', e => {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = setTimeout(() => {
+        state.search = e.target.value;
+        updateDashboard();
+        setTimeout(attachChartClicks, 100);
+    }, 220);
+});
+
+// ── Init ───────────────────────────────────────────────────────
+bsModal = new bootstrap.Modal(document.getElementById('companyModal'));
+updateDashboard();
+setTimeout(attachChartClicks, 200);
+</script>
+</body>
+</html>
